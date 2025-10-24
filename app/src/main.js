@@ -1,0 +1,2 @@
+const pets = ["apple","orange","banana","pear","watermelon","blueberry","grape"]
+pets.forEach((x)=>document.querySelector(".cardholder").insertAdjacentHTML("afterbegin",`<img class="fruitpic" src="pets/${x}.png" alt="${x}">`))
