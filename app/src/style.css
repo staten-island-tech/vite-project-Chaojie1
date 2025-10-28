@@ -1,10 +1,35 @@
 .card {
-    border-radius: 10px;
-    background:linear-gradient(-170deg,rgb(255, 255, 255),rgb(245, 245, 245) 60%,rgb(238, 238, 238) 40%,rgb(104, 113, 129)) ;
-    outline-style: solid;
-    width: 200px;
-    
-    height: 250px;
-    outline-width: 4px;
-    outline-color: black;
+  width: 200px;
+  height: 250px;
+
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+}
+.petpic {
+  border-radius: 10px;
+  outline-width: 4px;
+  outline-color: black;
+  background: linear-gradient(
+    -170deg,
+    rgb(255, 255, 255),
+    rgb(245, 245, 245) 60%,
+    rgb(238, 238, 238) 40%,
+    rgb(104, 113, 129)
+  );
+  outline-style: solid;
+  width: 200px;
+  height: 200px;
+}
+h1 {
+  width: 200px;
+  height: 10px;
+  margin-top: -10px;
+  font-size: 25px;
+  text-align: center;
+  font-family: cursive;
+}
+.selector {
+  width: 150px;
+  height: 20px;
 }
