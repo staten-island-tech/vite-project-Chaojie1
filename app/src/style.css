@@ -5,8 +5,10 @@
   justify-content: center;
   flex-wrap: wrap;
   display: flex;
+  margin: 10px;
+  margin-top: 25px;
 }
-.petpic {
+.card img {
   border-radius: 10px;
   outline-width: 4px;
   outline-color: black;
@@ -24,7 +26,7 @@
 h1 {
   width: 200px;
   height: 10px;
-  margin-top: -10px;
+  margin-top: 5px;
   font-size: 25px;
   text-align: center;
   font-family: cursive;
@@ -32,4 +34,10 @@ h1 {
 .selector {
   width: 150px;
   height: 20px;
+  margin-top: 10px;
+}
+.cardholder {
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
 }
