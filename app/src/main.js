@@ -10,59 +10,69 @@ pets.forEach((x) =>
     `
   )
 );
+function cyclelength(curnum) {
+  return new Promise((resolve)=>{
+  document
+    .querySelector(".cardholder")
+    .insertAdjacentHTML("afterbegin", `<h1 id="numtorem">${curnum}</h1>`);
+  document
+    .querySelector(".cardholder")
+    .insertAdjacentHTML("afterbegin", `<h1 id="countdown">5.00</h1>`);
+  let val = 1+Math.round(((curnum.length-1)/10)*100)/100;
+  const inter = setInterval(() => {
+    document.getElementById("countdown").textContent =
+      Math.round(val * 100) / 100;
+    val -= 0.01;
+    if (val <= 0) {
+      clearInterval(inter);
+      document.getElementById("numtorem").remove();
+      document
+        .querySelector(".cardholder")
+        .insertAdjacentHTML("afterbegin", "<h2>What was the number?</h2>");
+      document.getElementById("countdown").remove();
+      document
+        .querySelector(".cardholder")
+        .insertAdjacentHTML(
+          "afterbegin",
+          '<input type="text" id="answerinput" placeholder="Enter the number">'
+        );
+      document
+        .querySelector(".cardholder")
+        .insertAdjacentHTML(
+          "afterbegin",
+          '<button id="submit">Submit</button>'
+        );
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter"){
+        if (document.getElementById("answerinput").value.trim() === curnum) {
+          document
+            .querySelector(".cardholder")
+            .querySelector("h2").textContent = "CORRECT";
+            resolve(false)
+        } else {
+          document
+            .querySelector(".cardholder")
+            .querySelector("h2").textContent = `WRONG, the answer was ${curnum}`;
+            resolve(true)
+        }
+      }
+      });
+    }
+  }, 10);
+});
+}
 let selectedMode = undefined;
-function beginGame(mode) {
+async function beginGame(mode) {
   if (mode) {
     if (mode === "Length") {
       let failed = false;
-      let curnum = Math.round(Math.random() * 10).toString();
-      document
-        .querySelector(".cardholder")
-        .insertAdjacentHTML("afterbegin", `<h1 id="numtorem">${curnum}</h1>`);
-      document
-        .querySelector(".cardholder")
-        .insertAdjacentHTML("afterbegin", `<h1 id="countdown">5.00</h1>`);
-      let val = 5;
-      const inter = setInterval(() => {
-        document.getElementById("countdown").textContent =
-          Math.round(val * 100) / 100;
-        val -= 0.01;
-        if (val <= 0) {
-          clearInterval(inter);
-          document.getElementById("numtorem").remove();
-          document
-            .querySelector(".cardholder")
-            .insertAdjacentHTML("afterbegin", "<h2>What was the number?</h2>");
-          document.getElementById("countdown").remove();
-          document
-            .querySelector(".cardholder")
-            .insertAdjacentHTML(
-              "afterbegin",
-              '<input type="text" id="answerinput" placeholder="Enter the number">'
-            );
-          document
-            .querySelector(".cardholder")
-            .insertAdjacentHTML(
-              "afterbegin",
-              '<button id="submit">Submit</button>'
-            );
-          document
-            .getElementById("submit")
-            .addEventListener("click", function () {
-              if (
-                document.getElementById("answerinput").value.trim() === curnum
-              ) {
-                document
-                  .querySelector(".cardholder")
-                  .querySelector("h2").textContent = "CORRECT";
-              } else {
-                document
-                  .querySelector(".cardholder")
-                  .querySelector("h2").textContent = "WRONG";
-              }
-            });
-        }
-      }, 10);
+      let curnum = ""
+      while (!failed){
+        document.querySelector(".cardholder").innerHTML = "";
+        curnum = curnum+Math.round(Math.random() * 9).toString();
+        failed = await cyclelength(curnum)
+        await function(){return new Promise((resolve)=>setTimeout(resolve,2500))}
+      }
     }
   }
 }
@@ -71,7 +81,7 @@ document.querySelectorAll(".selector").forEach((x) =>
     selectedMode = event.target
       .closest(".card")
       .querySelector("h1").textContent;
-    document.querySelector(".cardholder").innerHTML = "";
+    
     beginGame(selectedMode);
   })
 );
