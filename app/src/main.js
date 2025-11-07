@@ -1,5 +1,5 @@
 const pets = ["Length", "Cards", "Simon"];
-const cards = ["circle","square","triangle"]
+const cards = ["circle", "square", "triangle"];
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
     "afterbegin",
@@ -74,18 +74,20 @@ async function beginGame(mode) {
         };
       }
     } else if (mode === "Cards") {
-      let selection = [undefined,undefined]
-              document.querySelector(".cardholder").innerHTML = "";
-      cards.forEach((x) =>
+      let selection = [undefined, undefined];
+      document.querySelector(".cardholder").innerHTML = "";
+      console.log(cards.length)
+      for (let i = 0; i < cards.length - 1; i++) {
+        console.log(i)
         document.querySelector(".cardholder").insertAdjacentHTML(
           "afterbegin",
-          `<div class="card">
-          <img src="cardimgs/${x}.png" alt="${x}">
-            <h1>${x}</h1>
+          `<div cardpair="${i} "class="card">
+          <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
+            <h1>${cards[i]}</h1>
           </div>
-           ` 
-        )
-      );
+           `
+        );
+      }
     }
   }
 }
