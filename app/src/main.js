@@ -74,20 +74,52 @@ async function beginGame(mode) {
         };
       }
     } else if (mode === "Cards") {
-      let selection = [undefined, undefined];
+      const selection = [undefined, undefined];
       document.querySelector(".cardholder").innerHTML = "";
-      console.log(cards.length)
-      for (let i = 0; i < cards.length - 1; i++) {
-        console.log(i)
+      for (let i = 0; i < cards.length; i++) {
         document.querySelector(".cardholder").insertAdjacentHTML(
           "afterbegin",
-          `<div cardpair="${i} "class="card">
+          `<div selectedalr="no" cardpair="${i}"class="card">
+          <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
+            <h1>${cards[i]}</h1>
+          </div>
+           `
+        );
+        document.querySelector(".cardholder").insertAdjacentHTML(
+          "afterbegin",
+          `<div selectedalr="no" cardpair="${i}"class="card">
           <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
             <h1>${cards[i]}</h1>
           </div>
            `
         );
       }
+      let firstselected = undefined
+      document.querySelectorAll(".card").forEach((x) =>
+        x.addEventListener("click", function () {
+          console.log(x.getAttribute("selectedalr"));
+          if (x.getAttribute("selectedalr") === "no") {
+            x.setAttribute("selectedalr", "yes");
+            if (!selection[0]) {
+              selection[0] = x.getAttribute("cardpair");
+              firstselected = x
+            } else if (!selection[1]) {
+              selection[1] = x.getAttribute("cardpair");
+              if (selection[0] === selection[1]) {
+                console.log("correct");
+              } else {
+                console.log("wrong");
+                firstselected.setAttribute("selectedalr","no")
+                x.setAttribute("selectedalr","no")
+              }
+              selection[0] = undefined;
+              selection[1] = undefined;
+              firstselected = undefined
+              
+            }
+          }
+        })
+      );
     }
   }
 }
