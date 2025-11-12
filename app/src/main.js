@@ -59,6 +59,7 @@ function cyclelength(curnum) {
     }, 10);
   });
 }
+let selecting =false
 let selectedMode = undefined;
 async function beginGame(mode) {
   if (mode) {
@@ -79,43 +80,46 @@ async function beginGame(mode) {
       for (let i = 0; i < cards.length; i++) {
         document.querySelector(".cardholder").insertAdjacentHTML(
           "afterbegin",
-          `<div selectedalr="no" cardpair="${i}"class="card">
+          `<div selectedalr="no" cardpair="${i}" cardid="${cards[i]}" class="card">
           <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
-            <h1>${cards[i]}</h1>
+            <h1></h1>
           </div>
            `
         );
         document.querySelector(".cardholder").insertAdjacentHTML(
           "afterbegin",
-          `<div selectedalr="no" cardpair="${i}"class="card">
+          `<div selectedalr="no" cardpair="${i}" cardid="${cards[i]}"class="card">
           <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
-            <h1>${cards[i]}</h1>
+            <h1></h1>
           </div>
            `
         );
       }
-      let firstselected = undefined
+      let firstselected = undefined;
       document.querySelectorAll(".card").forEach((x) =>
         x.addEventListener("click", function () {
-          console.log(x.getAttribute("selectedalr"));
           if (x.getAttribute("selectedalr") === "no") {
             x.setAttribute("selectedalr", "yes");
+            x.querySelector("h1").textContent = x.getAttribute("cardid");
             if (!selection[0]) {
               selection[0] = x.getAttribute("cardpair");
-              firstselected = x
+              firstselected = x;
             } else if (!selection[1]) {
               selection[1] = x.getAttribute("cardpair");
               if (selection[0] === selection[1]) {
                 console.log("correct");
               } else {
                 console.log("wrong");
-                firstselected.setAttribute("selectedalr","no")
-                x.setAttribute("selectedalr","no")
+                firstselected.setAttribute("selectedalr", "no");
+                x.setAttribute("selectedalr", "no");
+                setTimeout(function () {
+                  x.querySelector("h1").textContent = "";
+                  firstselected.querySelector("h1").textContent = "";
+                }, 500);
               }
               selection[0] = undefined;
               selection[1] = undefined;
-              firstselected = undefined
-              
+              firstselected = undefined;
             }
           }
         })
