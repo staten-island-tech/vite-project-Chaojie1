@@ -1,14 +1,6 @@
 .card {
   width: 200px;
   height: 250px;
-
-  justify-content: center;
-  flex-wrap: wrap;
-  display: flex;
-  margin: 10px;
-  margin-top: 25px;
-}
-.card img {
   border-radius: 10px;
   outline-width: 4px;
   outline-color: black;
@@ -20,6 +12,14 @@
     rgb(104, 113, 129)
   );
   outline-style: solid;
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+  margin: 10px;
+  margin-top: 25px;
+}
+.card img {
+
   width: 200px;
   height: 200px;
 }

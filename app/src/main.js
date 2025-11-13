@@ -1,5 +1,5 @@
 const pets = ["Length", "Cards", "Simon"];
-const cards = ["circle", "square", "triangle"];
+const cards = ["circle", "square", "triangle","hexagon","star"];
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
     "afterbegin",
@@ -59,7 +59,14 @@ function cyclelength(curnum) {
     }, 10);
   });
 }
-let selecting =false
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let ii = Math.floor(Math.random() * (i + 1));
+
+    [array[i], array[ii]] = [array[ii], array[i]];
+  }
+  return array;
+}
 let selectedMode = undefined;
 async function beginGame(mode) {
   if (mode) {
@@ -77,37 +84,44 @@ async function beginGame(mode) {
     } else if (mode === "Cards") {
       const selection = [undefined, undefined];
       document.querySelector(".cardholder").innerHTML = "";
-      for (let i = 0; i < cards.length; i++) {
-        document.querySelector(".cardholder").insertAdjacentHTML(
-          "afterbegin",
-          `<div selectedalr="no" cardpair="${i}" cardid="${cards[i]}" class="card">
-          <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
-            <h1></h1>
-          </div>
-           `
-        );
-        document.querySelector(".cardholder").insertAdjacentHTML(
-          "afterbegin",
-          `<div selectedalr="no" cardpair="${i}" cardid="${cards[i]}"class="card">
-          <img src="cardimgs/${cards[i]}.png" alt="${cards[i]}">
-            <h1></h1>
-          </div>
-           `
-        );
+      let cardss = []
+      for (let i=0;i<cards.length;i++){
+        cardss.push([cards[i],i]);
+        cardss.push([cards[i],i])
       }
+      console.log(cardss)
+      let cardsss = shuffleArray(cardss)
+      for (let i = 0; i < cardsss.length; i++) {
+          document.querySelector(".cardholder").insertAdjacentHTML(
+            "afterbegin",
+            `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0]}" class="card">
+          <img src="cardimgs/${cardsss[i][0]}.png" alt="${cardsss[i][0]}">
+            <h1></h1>
+          </div>
+           `
+          );
+      }
+      document
+        .querySelectorAll(".card")
+        .forEach((x) => (x.querySelector("img").style.opacity = 0));
+      let selecting = false;
       let firstselected = undefined;
       document.querySelectorAll(".card").forEach((x) =>
         x.addEventListener("click", function () {
-          if (x.getAttribute("selectedalr") === "no") {
+          if (x.getAttribute("selectedalr") === "no" && selecting === false) {
             x.setAttribute("selectedalr", "yes");
             x.querySelector("h1").textContent = x.getAttribute("cardid");
+            x.querySelector("img").style.opacity = 1;
+            console.log(x.getAttribute("cardpair"))
             if (!selection[0]) {
               selection[0] = x.getAttribute("cardpair");
               firstselected = x;
             } else if (!selection[1]) {
               selection[1] = x.getAttribute("cardpair");
+              selecting = true;
               if (selection[0] === selection[1]) {
                 console.log("correct");
+                selecting = false;
               } else {
                 console.log("wrong");
                 firstselected.setAttribute("selectedalr", "no");
@@ -115,11 +129,14 @@ async function beginGame(mode) {
                 setTimeout(function () {
                   x.querySelector("h1").textContent = "";
                   firstselected.querySelector("h1").textContent = "";
-                }, 500);
+                  x.querySelector("img").style.opacity = 0;
+                  firstselected.querySelector("img").style.opacity = 0;
+                  firstselected = undefined;
+                  selecting = false;
+                }, 750);
               }
               selection[0] = undefined;
               selection[1] = undefined;
-              firstselected = undefined;
             }
           }
         })
