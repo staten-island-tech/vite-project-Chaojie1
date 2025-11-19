@@ -1,5 +1,15 @@
 const pets = ["Length", "Cards", "Simon"];
-const cards = ["circle", "square", "triangle","hexagon","star"];
+const cards = [
+  "circle",
+  "square",
+  "triangle",
+  "hexagon",
+  "star",
+  "minecraft",
+  "roblox",
+  "tesseract",
+  "dodecahedron",
+];
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
     "afterbegin",
@@ -77,51 +87,74 @@ async function beginGame(mode) {
         document.querySelector(".cardholder").innerHTML = "";
         curnum = curnum + Math.round(Math.random() * 9).toString();
         failed = await cyclelength(curnum);
-        await function () {
-          return new Promise((resolve) => setTimeout(resolve, 2500));
-        };
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     } else if (mode === "Cards") {
       const selection = [undefined, undefined];
       document.querySelector(".cardholder").innerHTML = "";
-      let cardss = []
-      for (let i=0;i<cards.length;i++){
-        cardss.push([cards[i],i]);
-        cardss.push([cards[i],i])
+      let cardss = [];
+      for (let i = 0; i < cards.length; i++) {
+        cardss.push([cards[i], i]);
+        cardss.push([cards[i], i]);
       }
-      console.log(cardss)
-      let cardsss = shuffleArray(cardss)
+      console.log(cardss);
+      let cardsss = shuffleArray(cardss);
       for (let i = 0; i < cardsss.length; i++) {
-          document.querySelector(".cardholder").insertAdjacentHTML(
-            "afterbegin",
-            `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0]}" class="card">
+        document.querySelector(".cardholder").insertAdjacentHTML(
+          "afterbegin",
+          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0]}" class="card">
           <img src="cardimgs/${cardsss[i][0]}.png" alt="${cardsss[i][0]}">
             <h1></h1>
           </div>
            `
-          );
+        );
       }
+      document.querySelector(".cardholder").insertAdjacentHTML(
+        "beforeend",
+        `<h2>tries: 0</h2>
+           `
+      );
+            document.querySelector(".cardholder").insertAdjacentHTML(
+        "beforeend",
+        `<h3>time wasted: 0</h3>
+           `
+      );
       document
         .querySelectorAll(".card")
         .forEach((x) => (x.querySelector("img").style.opacity = 0));
       let selecting = false;
       let firstselected = undefined;
+      let tries = 0;
+      let timespent = 0;
+      let correct = 0;
       document.querySelectorAll(".card").forEach((x) =>
         x.addEventListener("click", function () {
           if (x.getAttribute("selectedalr") === "no" && selecting === false) {
             x.setAttribute("selectedalr", "yes");
             x.querySelector("h1").textContent = x.getAttribute("cardid");
             x.querySelector("img").style.opacity = 1;
-            console.log(x.getAttribute("cardpair"))
+            console.log(x.getAttribute("cardpair"));
             if (!selection[0]) {
               selection[0] = x.getAttribute("cardpair");
               firstselected = x;
             } else if (!selection[1]) {
               selection[1] = x.getAttribute("cardpair");
               selecting = true;
+              tries += 1;
+              document.querySelector(".cardholder").querySelector("h2").textContent = `tries: ${tries}`
               if (selection[0] === selection[1]) {
                 console.log("correct");
+                correct += 1;
                 selecting = false;
+                if (correct === cards.length) {
+                  document.querySelector(".cardholder").innerHTML = "";
+                  document
+                    .querySelector(".cardholder")
+                    .insertAdjacentHTML(
+                      "afterbegin",
+                      `<h1>you got it in ${tries} tries and spent ${(timespent-(timespent%60))/60}:${timespent%60} on this</h1>`
+                    );
+                }
               } else {
                 console.log("wrong");
                 firstselected.setAttribute("selectedalr", "no");
@@ -141,6 +174,11 @@ async function beginGame(mode) {
           }
         })
       );
+       while (correct != cards.length){
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        timespent += 1
+        document.querySelector(".cardholder").querySelector("h3").textContent = `time wasted: ${(timespent-(timespent%60))}:${timespent%60}`
+       }
     }
   }
 }
