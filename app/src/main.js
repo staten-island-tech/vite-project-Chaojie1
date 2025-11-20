@@ -1,14 +1,14 @@
-const pets = ["Length", "Cards", "Simon"];
+const pets = ["Length", "Cards",];
 const cards = [
-  "circle",
-  "square",
-  "triangle",
-  "hexagon",
-  "star",
-  "minecraft",
-  "roblox",
-  "tesseract",
-  "dodecahedron",
+  {Name:"circle",Link:"circle.png",Custom:false},
+  {Name:"dodecahedron",Link:"dodecahedron.png",Custom:false},
+  {Name:"hexagon",Link:"hexagon.png",Custom:false},
+  {Name:"minecraft",Link:"minecraft.png",Custom:false},
+  {Name:"roblox",Link:"roblox.png",Custom:false},
+  {Name:"square",Link:"square.png",Custom:false},
+  {Name:"star",Link:"star.png",Custom:false},
+  {Name:"tesseract",Link:"tesseract.png",Custom:false},
+  {Name:"triangle",Link:"triangle.png",Custom:false},
 ];
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
@@ -97,17 +97,27 @@ async function beginGame(mode) {
         cardss.push([cards[i], i]);
         cardss.push([cards[i], i]);
       }
-      console.log(cardss);
       let cardsss = shuffleArray(cardss);
       for (let i = 0; i < cardsss.length; i++) {
+        if (cardsss[i][0].Custom === false){
         document.querySelector(".cardholder").insertAdjacentHTML(
           "afterbegin",
-          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0]}" class="card">
-          <img src="cardimgs/${cardsss[i][0]}.png" alt="${cardsss[i][0]}">
+          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
+          <img src="cardimgs/${cardsss[i][0].Link}" alt="${cardsss[i][0].Name}">
             <h1></h1>
           </div>
            `
         );
+      } else {
+                document.querySelector(".cardholder").insertAdjacentHTML(
+          "afterbegin",
+          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
+          <img src="${cardsss[i][0].Link}" alt="${cardsss[i][0].Name}">
+            <h1></h1>
+          </div>
+           `
+        );
+      }
       }
       document.querySelector(".cardholder").insertAdjacentHTML(
         "beforeend",
@@ -133,7 +143,6 @@ async function beginGame(mode) {
             x.setAttribute("selectedalr", "yes");
             x.querySelector("h1").textContent = x.getAttribute("cardid");
             x.querySelector("img").style.opacity = 1;
-            console.log(x.getAttribute("cardpair"));
             if (!selection[0]) {
               selection[0] = x.getAttribute("cardpair");
               firstselected = x;
@@ -143,7 +152,6 @@ async function beginGame(mode) {
               tries += 1;
               document.querySelector(".cardholder").querySelector("h2").textContent = `tries: ${tries}`
               if (selection[0] === selection[1]) {
-                console.log("correct");
                 correct += 1;
                 selecting = false;
                 if (correct === cards.length) {
@@ -156,7 +164,6 @@ async function beginGame(mode) {
                     );
                 }
               } else {
-                console.log("wrong");
                 firstselected.setAttribute("selectedalr", "no");
                 x.setAttribute("selectedalr", "no");
                 setTimeout(function () {
