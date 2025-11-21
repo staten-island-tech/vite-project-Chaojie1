@@ -1,15 +1,21 @@
-const pets = ["Length", "Cards",];
+const pets = ["Length", "Cards"];
 const cards = [
-  {Name:"circle",Link:"circle.png",Custom:false},
-  {Name:"dodecahedron",Link:"dodecahedron.png",Custom:false},
-  {Name:"hexagon",Link:"hexagon.png",Custom:false},
-  {Name:"minecraft",Link:"minecraft.png",Custom:false},
-  {Name:"roblox",Link:"roblox.png",Custom:false},
-  {Name:"square",Link:"square.png",Custom:false},
-  {Name:"star",Link:"star.png",Custom:false},
-  {Name:"tesseract",Link:"tesseract.png",Custom:false},
-  {Name:"triangle",Link:"triangle.png",Custom:false},
+  { Name: "circle", Custom: false },
+  { Name: "dodecahedron", Custom: false },
+  { Name: "hexagon", Custom: false },
+  { Name: "minecraft", Custom: false },
+  { Name: "roblox", Custom: false },
+  { Name: "square", Custom: false },
+  { Name: "star", Custom: false },
+  { Name: "tesseract", Custom: false },
+  { Name: "triangle", Custom: false },
 ];
+document
+  .querySelector(".cardholder")
+  .insertAdjacentHTML(
+    "afterbegin",
+    '<input type="text" id="answerinput" placeholder="Enter the number">'
+  );
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
     "afterbegin",
@@ -99,32 +105,32 @@ async function beginGame(mode) {
       }
       let cardsss = shuffleArray(cardss);
       for (let i = 0; i < cardsss.length; i++) {
-        if (cardsss[i][0].Custom === false){
-        document.querySelector(".cardholder").insertAdjacentHTML(
-          "afterbegin",
-          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
-          <img src="cardimgs/${cardsss[i][0].Link}" alt="${cardsss[i][0].Name}">
+        if (cardsss[i][0].Custom === false) {
+          document.querySelector(".cardholder").insertAdjacentHTML(
+            "afterbegin",
+            `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
+          <img src="cardimgs/${cardsss[i][0].Name}.png" alt="${cardsss[i][0].Name}">
             <h1></h1>
           </div>
            `
-        );
-      } else {
-                document.querySelector(".cardholder").insertAdjacentHTML(
-          "afterbegin",
-          `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
+          );
+        } else {
+          document.querySelector(".cardholder").insertAdjacentHTML(
+            "afterbegin",
+            `<div selectedalr="no" cardpair="${cardsss[i][1]}" cardid="${cardsss[i][0].Name}" class="card">
           <img src="${cardsss[i][0].Link}" alt="${cardsss[i][0].Name}">
             <h1></h1>
           </div>
            `
-        );
-      }
+          );
+        }
       }
       document.querySelector(".cardholder").insertAdjacentHTML(
         "beforeend",
         `<h2>tries: 0</h2>
            `
       );
-            document.querySelector(".cardholder").insertAdjacentHTML(
+      document.querySelector(".cardholder").insertAdjacentHTML(
         "beforeend",
         `<h3>time wasted: 0</h3>
            `
@@ -150,7 +156,9 @@ async function beginGame(mode) {
               selection[1] = x.getAttribute("cardpair");
               selecting = true;
               tries += 1;
-              document.querySelector(".cardholder").querySelector("h2").textContent = `tries: ${tries}`
+              document
+                .querySelector(".cardholder")
+                .querySelector("h2").textContent = `tries: ${tries}`;
               if (selection[0] === selection[1]) {
                 correct += 1;
                 selecting = false;
@@ -160,7 +168,7 @@ async function beginGame(mode) {
                     .querySelector(".cardholder")
                     .insertAdjacentHTML(
                       "afterbegin",
-                      `<h1>you got it in ${tries} tries and spent ${(timespent-(timespent%60))/60}:${timespent%60} on this</h1>`
+                      `<h1>you got it in ${tries} tries and spent ${timespent} seconds on this</h1>`
                     );
                 }
               } else {
@@ -181,11 +189,13 @@ async function beginGame(mode) {
           }
         })
       );
-       while (correct != cards.length){
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        timespent += 1
-        document.querySelector(".cardholder").querySelector("h3").textContent = `time wasted: ${(timespent-(timespent%60))}:${timespent%60}`
-       }
+      while (correct != cards.length) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        timespent += 1;
+        document
+          .querySelector(".cardholder")
+          .querySelector("h3").textContent = `time wasted: ${timespent}s`;
+      }
     }
   }
 }
