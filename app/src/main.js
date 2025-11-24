@@ -1,4 +1,4 @@
-const pets = ["Length", "Cards"];
+const pets = ["Cards"];
 const cards = [
   { Name: "circle", Custom: false },
   { Name: "dodecahedron", Custom: false },
@@ -14,8 +14,18 @@ document
   .querySelector(".cardholder")
   .insertAdjacentHTML(
     "afterbegin",
-    '<input type="text" id="answerinput" placeholder="Enter the number">'
+    '<input type="text" id="name" placeholder="name"><input type="text" id="url" placeholder="url"><button id="adcard">insert card</button>'
   );
+
+  document.getElementById("adcard").addEventListener("click",function(event){
+    cards.push({
+      Name: `${document.getElementById("name").value}`,
+      Link: `${document.getElementById("url").value}`,
+      Custom: true
+    })
+    document.getElementById("name").value = ""
+    document.getElementById("url").value = ""
+  })
 pets.forEach((x) =>
   document.querySelector(".cardholder").insertAdjacentHTML(
     "afterbegin",
@@ -27,54 +37,6 @@ pets.forEach((x) =>
     `
   )
 );
-function cyclelength(curnum) {
-  return new Promise((resolve) => {
-    document
-      .querySelector(".cardholder")
-      .insertAdjacentHTML("afterbegin", `<h1 id="numtorem">${curnum}</h1>`);
-    document
-      .querySelector(".cardholder")
-      .insertAdjacentHTML("afterbegin", `<h1 id="countdown">5.00</h1>`);
-    let val = 1 + Math.round(((curnum.length - 1) / 10) * 100) / 100;
-    const inter = setInterval(() => {
-      document.getElementById("countdown").textContent =
-        Math.round(val * 100) / 100;
-      val -= 0.01;
-      if (val <= 0) {
-        clearInterval(inter);
-        document.querySelector(".cardholder").innerHTML = "";
-        document
-          .querySelector(".cardholder")
-          .insertAdjacentHTML("afterbegin", "<h2>What was the number?</h2>");
-        document
-          .querySelector(".cardholder")
-          .insertAdjacentHTML(
-            "afterbegin",
-            '<input type="text" id="answerinput" placeholder="Enter the number">'
-          );
-        document.addEventListener("keydown", function (event) {
-          if (event.key === "Enter") {
-            if (
-              document.getElementById("answerinput").value.trim() === curnum
-            ) {
-              document
-                .querySelector(".cardholder")
-                .querySelector("h2").textContent = "CORRECT";
-              resolve(false);
-            } else {
-              document
-                .querySelector(".cardholder")
-                .querySelector(
-                  "h2"
-                ).textContent = `WRONG, the answer was ${curnum}`;
-              resolve(true);
-            }
-          }
-        });
-      }
-    }, 10);
-  });
-}
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let ii = Math.floor(Math.random() * (i + 1));
@@ -86,16 +48,7 @@ function shuffleArray(array) {
 let selectedMode = undefined;
 async function beginGame(mode) {
   if (mode) {
-    if (mode === "Length") {
-      let failed = false;
-      let curnum = "";
-      while (!failed) {
-        document.querySelector(".cardholder").innerHTML = "";
-        curnum = curnum + Math.round(Math.random() * 9).toString();
-        failed = await cyclelength(curnum);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-    } else if (mode === "Cards") {
+if (mode === "Cards") {
       const selection = [undefined, undefined];
       document.querySelector(".cardholder").innerHTML = "";
       let cardss = [];
