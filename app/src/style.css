@@ -18,7 +18,7 @@
   margin: 10px;
   margin-top: 25px;
 }
-.card img {
+img {
 
   width: 200px;
   height: 200px;
@@ -40,4 +40,12 @@ h1 {
   justify-content: center;
   flex-wrap: wrap;
   display: flex;
+}
+input {
+  width: 50px;
+  height: 10px;
+}
+.smallbutton {
+      width: 60px;
+  height: 20px;
 }

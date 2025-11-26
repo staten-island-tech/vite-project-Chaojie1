@@ -200,7 +200,7 @@ async function beginGame(mode) {
         .querySelector(".cardholder")
         .insertAdjacentHTML(
           "afterbegin",
-          '<input type="text" id="name" placeholder="name"><input type="text" id="url" placeholder="url"><button id="adcard">insert card</button><button id="start">start</button>'
+          '<input type="text" id="name" placeholder="name"><input type="text" id="url" placeholder="url"><button id="adcard" class="smallbutton">insert</button><button id="start" class="smallbutton">start</button>'
         );
 
       document
@@ -211,9 +211,25 @@ async function beginGame(mode) {
             Link: `${document.getElementById("url").value}`,
             Custom: true,
           });
+          document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div><h4>Name: ${document.getElementById("name").value} ImgUrl: ${document.getElementById("url").value}</h4><button class="smallbutton">remove</button></div>`)
           document.getElementById("name").value = "";
           document.getElementById("url").value = "";
         });
+        document.querySelector(".cardholder").insertAdjacentHTML("beforeend","<div id='cardlist'></div>")
+        cards.forEach((x)=>{
+          if (x.Custom === false){
+          document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div><h4 cardname="${x.Name}">Name: ${x.Name} ImgUrl: ${x.Name}.png"</h4><button class="smallbutton remover">remove</button></div>`)
+          } else {
+            document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div><h4 cardname="${x.Name}">Name: ${x.Name} ImgUrl: ${x.Link}"</h4><button class="smallbutton remover">remove</button></div>`)
+          }
+        })
+        document.querySelectorAll("#remover").forEach((x)=>
+          x.addEventListener("click",function(event){
+            cards.splice(cards.indexOf(cards.find(({Name}) => Name === event.target.closest("div").querySelector("h4").getAttribute("cardname"))),1)
+            
+          })
+
+        )
               document
         .getElementById("start")
         .addEventListener("click", beginCards)
