@@ -1,4 +1,8 @@
 const pets = ["Cards", "Length"];
+let selectedMode;
+if (localStorage.getItem("gamemodes")){
+localStorage.getItem("gamemodes").forEach((x)=>pets.push(x))
+}
 const cards = [
   { Name: "circle", Custom: false },
   { Name: "dodecahedron", Custom: false },
@@ -58,6 +62,16 @@ function cyclelength(curnum) {
     }, 10);
   });
 }
+
+document.querySelector(".btn").addEventListener("click", function () {
+  if (document.body.classList.contains("light")) {
+    document.body.classList.add("dark");
+    document.body.classList.remove("light");
+  } else {
+    document.body.classList.add("light");
+    document.body.classList.remove("dark");
+  }
+});
 async function beginCards() {
         const selection = [undefined, undefined];
       document.querySelector(".cardholder").innerHTML = "";
@@ -101,76 +115,74 @@ async function beginCards() {
       document
         .querySelectorAll(".card")
         .forEach((x) => (x.querySelector("img").style.opacity = 0));
+
       let selecting = false;
       let firstselected = undefined;
       let tries = 0;
       let timespent = 0;
       let correct = 0;
       document.querySelectorAll(".card").forEach((x) =>
+    
         x.addEventListener("click", function () {
+          /* Reveal selected card */
           if (x.getAttribute("selectedalr") === "no" && selecting === false) {
             x.setAttribute("selectedalr", "yes");
             x.querySelector("h1").textContent = x.getAttribute("cardid");
             x.querySelector("img").style.opacity = 1;
-            if (!selection[0]) {
+          } else {return}
+
+          /* Check if the player has selected two cards */
+          if (!selection[0]) {
               selection[0] = x.getAttribute("cardpair");
               firstselected = x;
-            } else if (!selection[1]) {
+              return
+          } else if (!selection[1]) {
               selection[1] = x.getAttribute("cardpair");
               selecting = true;
               tries += 1;
-              document
-                .querySelector(".cardholder")
-                .querySelector("h2").textContent = `tries: ${tries}`;
-              if (selection[0] === selection[1]) {
-                correct += 1;
-                selecting = false;
-                if (correct === cards.length) {
-                  document.querySelector(".cardholder").innerHTML = "";
-                  document
-                    .querySelector(".cardholder")
-                    .insertAdjacentHTML(
-                      "afterbegin",
-                      `<h1>you got it in ${tries} tries and spent ${timespent} seconds on this</h1>`
-                    );
-                }
-              } else {
-                firstselected.setAttribute("selectedalr", "no");
-                x.setAttribute("selectedalr", "no");
-                setTimeout(function () {
-                  x.querySelector("h1").textContent = "";
-                  firstselected.querySelector("h1").textContent = "";
-                  x.querySelector("img").style.opacity = 0;
-                  firstselected.querySelector("img").style.opacity = 0;
-                  firstselected = undefined;
-                  selecting = false;
-                }, 750);
-              }
+              document.querySelector(".cardholder").querySelector("h2").textContent = `tries: ${tries}`;
+          } else {return}
+
+          /* if the player is correct, +1 to correct, else hide both cards */
+          if (selection[0] === selection[1]) {
+              correct += 1;
+              selecting = false;
               selection[0] = undefined;
               selection[1] = undefined;
-            }
+          } else {
+              firstselected.setAttribute("selectedalr", "no");
+              x.setAttribute("selectedalr", "no");
+              setTimeout(function () {
+                x.querySelector("h1").textContent = "";
+                firstselected.querySelector("h1").textContent = "";
+                x.querySelector("img").style.opacity = 0;
+                firstselected.querySelector("img").style.opacity = 0;
+                firstselected = undefined;
+                selecting = false;
+              }, 750);
+              selection[0] = undefined;
+              selection[1] = undefined;
+              return
+          }
+
+          /* if the amount of corrects is matching the required amount of corrects to win. End the game */
+          if (correct === cards.length) {
+              document.querySelector(".cardholder").innerHTML = "";
+              document.querySelector(".cardholder").insertAdjacentHTML("afterbegin",`<h1>you got it in ${tries} tries and spent ${timespent} seconds on this</h1>`);
           }
         })
       );
+      /* Separate loop to see time lapsed */
       while (correct != cards.length) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         timespent += 1;
+        if (document.querySelector(".cardholder").querySelector("h3")) {
         document
           .querySelector(".cardholder")
           .querySelector("h3").textContent = `time wasted: ${timespent}s`;
+        }
       }
 }
-pets.forEach((x) =>
-  document.querySelector(".cardholder").insertAdjacentHTML(
-    "afterbegin",
-    `<div class="card">
-    <img src="./modes/${x}.png" alt="${x}">
-      <h1>${x}</h1>
-      <button class="selector">Select</button>
-    </div>
-    `
-  )
-);
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let ii = Math.floor(Math.random() * (i + 1));
@@ -179,7 +191,6 @@ function shuffleArray(array) {
   }
   return array;
 }
-let selectedMode = undefined;
 async function beginGame(mode) {
   if (mode) {
             document.querySelector(".cardholder").innerHTML = "";
@@ -200,9 +211,14 @@ async function beginGame(mode) {
         .querySelector(".cardholder")
         .insertAdjacentHTML(
           "afterbegin",
-          '<input type="text" id="name" placeholder="name"><input type="text" id="url" placeholder="url"><button id="adcard" class="smallbutton">insert</button><button id="start" class="smallbutton">start</button>'
+          '<input type="text" id="name" placeholder="name"><input type="text" id="url" placeholder="url"><button id="adcard" class="smallbutton">insert</button><button id="start" class="smallbutton">start</button><input type="text" id="name" placeholder="name"><input type="text" id="modemaker" placeholder="modename"><button id="createmode" class="smallbutton">save as</button>'
         );
-
+      document
+        .getElementById("createmode").addEventListener("click",function(event){
+          pets.push(document.getElementById("modemaker").value)
+          document.getElementById("modemaker").value=""
+          localStorage.setItem("gamemodes",pets)
+        })
       document
         .getElementById("adcard")
         .addEventListener("click", function (event) {
@@ -211,9 +227,14 @@ async function beginGame(mode) {
             Link: `${document.getElementById("url").value}`,
             Custom: true,
           });
-          document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div><h4>Name: ${document.getElementById("name").value} ImgUrl: ${document.getElementById("url").value}</h4><button class="smallbutton">remove</button></div>`)
+          document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div id="${document.getElementById("name").value}"><h4>Name: ${document.getElementById("name").value} ImgUrl: ${document.getElementById("url").value}</h4><button class="smallbutton remover">remove</button></div>`)
+          document.getElementById(document.getElementById("name").value).querySelector(".remover").addEventListener("click",function(event){
+            cards.splice(cards.indexOf(cards.find(({Name}) => Name === event.target.closest("div").querySelector("h4").getAttribute("cardname"))),1)
+            event.target.closest("div").remove()
+          })
           document.getElementById("name").value = "";
           document.getElementById("url").value = "";
+ 
         });
         document.querySelector(".cardholder").insertAdjacentHTML("beforeend","<div id='cardlist'></div>")
         cards.forEach((x)=>{
@@ -223,10 +244,10 @@ async function beginGame(mode) {
             document.getElementById("cardlist").insertAdjacentHTML("beforeend",`<div><h4 cardname="${x.Name}">Name: ${x.Name} ImgUrl: ${x.Link}"</h4><button class="smallbutton remover">remove</button></div>`)
           }
         })
-        document.querySelectorAll("#remover").forEach((x)=>
+        document.querySelectorAll(".remover").forEach((x)=>
           x.addEventListener("click",function(event){
             cards.splice(cards.indexOf(cards.find(({Name}) => Name === event.target.closest("div").querySelector("h4").getAttribute("cardname"))),1)
-            
+            event.target.closest("div").remove()
           })
 
         )
@@ -237,6 +258,22 @@ async function beginGame(mode) {
   }
   
 }
+
+document.body.insertAdjacentHTML("afterbegin","<button class='btn'>toggle dark</button>")
+
+/* Starting code that displays the gamemodes */
+pets.forEach((x) =>
+  document.querySelector(".cardholder").insertAdjacentHTML(
+    "afterbegin",
+    `<div class="card">
+      <h1>${x}</h1>
+      <button class="selector">Select</button>
+    </div>
+    `
+  )
+);
+
+/* gamemode buttons event maker */
 document.querySelectorAll(".selector").forEach((x) =>
   x.addEventListener("click", function (event) {
     selectedMode = event.target
@@ -246,3 +283,4 @@ document.querySelectorAll(".selector").forEach((x) =>
     beginGame(selectedMode);
   })
 );
+

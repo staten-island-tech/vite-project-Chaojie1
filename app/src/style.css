@@ -3,14 +3,9 @@
   height: 270px;
   border-radius: 10px;
   outline-width: 4px;
-  outline-color: black;
-  background: linear-gradient(
-    -170deg,
-    rgb(255, 255, 255),
-    rgb(245, 245, 245) 60%,
-    rgb(238, 238, 238) 40%,
-    rgb(104, 113, 129)
-  );
+  outline-color: var(--text);
+    color: var(--text);
+  background: var(--card-bg);
   outline-style: solid;
   justify-content: center;
   flex-wrap: wrap;
@@ -18,6 +13,7 @@
   margin: 10px;
   margin-top: 25px;
 }
+
 img {
 
   width: 200px;
@@ -48,4 +44,32 @@ input {
 .smallbutton {
       width: 60px;
   height: 20px;
+}
+:root {
+  --bg: #fff;
+  --text: #000;
+  --card-bg: linear-gradient(
+    -170deg,
+    rgb(255, 255, 255),
+    rgb(245, 245, 245) 60%,
+    rgb(238, 238, 238) 40%,
+    rgb(104, 113, 129)
+  );
+}
+
+.dark {
+  --bg: #000;
+  --text: #fff;
+  --card-bg: linear-gradient(
+    -170deg,
+    rgb(40, 40, 40),
+    rgb(50, 50, 50) 60%,
+    rgb(60, 60, 60) 40%,
+    rgb(20, 20, 20)
+  );
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
 }
